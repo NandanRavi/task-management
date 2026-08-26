@@ -5,6 +5,7 @@ A robust, scalable Task Management Backend built with **Django**, **Django REST 
 ---
 
 ## 📌 Table of Contents
+
 - [Overview](#overview)
 - [Architecture & Tech Stack](#architecture--tech-stack)
 - [Features](#features)
@@ -39,7 +40,7 @@ The Task Management System enables teams to organize projects and tasks with gra
 ## ✨ Features
 
 - **JWT Authentication**: User registration, login with token generation, and secure token blacklisting on logout.
-- **Hierarchical Access Control**: 
+- **Hierarchical Access Control**:
   - Admins can manage all projects and tasks.
   - Clients are limited to their assigned projects and tasks.
 - **Unified Endpoints**: Streamlined RESTful views handling list, retrieve, create, partial update (PATCH), and delete operations.
@@ -51,6 +52,7 @@ The Task Management System enables teams to organize projects and tasks with gra
 ## 🗄 Database Models
 
 ### 1. `CustomUser`
+
 - `id` (UUID, Primary Key)
 - `email` (EmailField, Unique)
 - `full_name` (CharField)
@@ -59,6 +61,7 @@ The Task Management System enables teams to organize projects and tasks with gra
 - `created_at`, `updated_at` (DateTimeField)
 
 ### 2. `Projects`
+
 - `id` (UUID, Primary Key)
 - `user` (ForeignKey -> CustomUser, Project Owner)
 - `name` (CharField)
@@ -68,6 +71,7 @@ The Task Management System enables teams to organize projects and tasks with gra
 - `created_at`, `updated_at` (DateTimeField)
 
 ### 3. `Task`
+
 - `id` (UUID, Primary Key)
 - `project` (ForeignKey -> Projects)
 - `title` (CharField)
@@ -81,37 +85,41 @@ The Task Management System enables teams to organize projects and tasks with gra
 
 ## 🔐 Role-Based Access Control (RBAC)
 
-| Resource | Action | Superuser | Admin | Client |
-| :--- | :--- | :---: | :---: | :---: |
-| **Auth** | Register Admin | ✅ | ❌ | ❌ |
-| **Auth** | Register Client | ✅ | ✅ | ✅ (Unauthenticated / Self) |
-| **Projects** | View List | All | All | Owned or Assigned Tasks |
-| **Projects** | Create | ✅ | ✅ | ❌ |
-| **Projects** | Retrieve Detail | ✅ | ✅ | Owned or Assigned Tasks |
-| **Projects** | Update (PATCH) | ✅ | ✅ | ❌ |
-| **Projects** | Delete | ✅ | ✅ | ❌ |
-| **Tasks** | View List | All | All | Assigned to user or owned project |
-| **Tasks** | Create | ✅ | ✅ | ❌ |
-| **Tasks** | Retrieve Detail | ✅ | ✅ | Assigned to user or owned project |
-| **Tasks** | Update (PATCH) | ✅ | ✅ | Assigned user only |
-| **Tasks** | Delete | ✅ | ❌ | Project owner only |
+| Resource     | Action          | Superuser | Admin |              Client               |
+| :----------- | :-------------- | :-------: | :---: | :-------------------------------: |
+| **Auth**     | Register Admin  |    ✅     |  ❌   |                ❌                 |
+| **Auth**     | Register Client |    ✅     |  ✅   |    ✅ (Unauthenticated / Self)    |
+| **Projects** | View List       |    All    |  All  |      Owned or Assigned Tasks      |
+| **Projects** | Create          |    ✅     |  ✅   |                ❌                 |
+| **Projects** | Retrieve Detail |    ✅     |  ✅   |      Owned or Assigned Tasks      |
+| **Projects** | Update (PATCH)  |    ✅     |  ✅   |                ❌                 |
+| **Projects** | Delete          |    ✅     |  ✅   |                ❌                 |
+| **Tasks**    | View List       |    All    |  All  | Assigned to user or owned project |
+| **Tasks**    | Create          |    ✅     |  ✅   |                ❌                 |
+| **Tasks**    | Retrieve Detail |    ✅     |  ✅   | Assigned to user or owned project |
+| **Tasks**    | Update (PATCH)  |    ✅     |  ✅   |        Assigned user only         |
+| **Tasks**    | Delete          |    ✅     |  ❌   |        Project owner only         |
+| **Users**    | View List       |    All    |  All  |               All                 |
 
 ---
 
 ## ⚙ Installation & Setup
 
 ### Prerequisites
+
 - Python 3.10+
 - Virtual Environment tool (`venv`)
 
 ### Setup Instructions
 
 1. **Clone or Navigate to the project directory**:
+
    ```bash
    cd task_management
    ```
 
 2. **Create and Activate Virtual Environment**:
+
    ```bash
    # Windows
    python -m venv .venv
@@ -123,11 +131,13 @@ The Task Management System enables teams to organize projects and tasks with gra
    ```
 
 3. **Install Dependencies**:
+
    ```bash
-   pip install django djangorestframework djangorestframework-simplejwt channels daphne django-q
+   pip install -r requirements.txt
    ```
 
 4. **Run Migrations**:
+
    ```bash
    python manage.py makemigrations
    python manage.py migrate
@@ -143,6 +153,7 @@ The Task Management System enables teams to organize projects and tasks with gra
 ## 🔑 Environment Variables (`.env`)
 
 Create a `.env` file in the root directory:
+
 ```env
 SECRET_KEY=your_django_secret_key
 DEBUG=True
@@ -160,11 +171,13 @@ DEFAULT_FROM_EMAIL=your_email@example.com
 ## 🏃 Running the Application
 
 ### 1. Development Server (HTTP + WebSockets)
+
 ```bash
-python manage.py runserver 8002
+python manage.py runserver 8000
 ```
 
 ### 2. Django-Q Background Worker
+
 ```bash
 python manage.py qcluster
 ```
@@ -173,14 +186,16 @@ python manage.py qcluster
 
 ## 📡 API Endpoints Summary
 
-Base URL: `http://localhost:8002/api/`
+Base URL: `http://localhost:8000/api/`
 
 ### 1. Authentication
+
 - `POST /api/auth/register/` - Register user (`email`, `password`, `full_name`, `user_type`)
 - `POST /api/auth/login/` - Login & obtain JWT access + refresh tokens
 - `POST /api/auth/logout/` - Blacklist refresh token
 
 ### 2. Projects (`ProjectView`)
+
 - `GET /api/projects/` - List projects (Supports `?status=true/false` and `?search=term`)
 - `POST /api/projects/` - Create project (Admin only)
 - `GET /api/projects/<uuid:pk>/` - Get project details
@@ -188,17 +203,22 @@ Base URL: `http://localhost:8002/api/`
 - `DELETE /api/projects/<uuid:pk>/` - Delete project (Admin only)
 
 ### 3. Tasks (`TaskView`)
+
 - `GET /api/tasks/` - List tasks (Supports `?project=<id>`, `?assigned_to=<id>`, `?status=true/false`, `?search=term`, `?ordering=field`)
 - `POST /api/tasks/` - Create task (Admin only)
 - `GET /api/tasks/<uuid:pk>/` - Get task details
 - `PATCH /api/tasks/<uuid:pk>/` - Update task (Admin or Assigned User)
 - `DELETE /api/tasks/<uuid:pk>/` - Delete task (Project Owner or Superuser)
 
+### 4. Users (`UserListView`)
+
+- `GET /api/users/` - List all users (Supports `?user_type=admin` or `?user_type=client`)
+
 ---
 
 ## 🔌 WebSocket Support
 
-- **WebSocket URL**: `ws://localhost:8002/ws/tasks/<project_id>/`
+- **WebSocket URL**: `ws://localhost:8000/ws/tasks/<project_id>/`
 - Connects client to real-time project updates.
 - Broadcast payload example:
   ```json
@@ -217,6 +237,7 @@ Base URL: `http://localhost:8002/api/`
 ## ⏱ Asynchronous Background Tasks
 
 Implemented via Django-Q in `app1/tasks.py`:
+
 - `send_task_reminder(task_id)`: Automated email when a task is overdue.
 - `check_overdue_tasks()`: Scheduled periodic scan for overdue uncompleted tasks.
 - `send_welcome_email(user_id)`: Welcome email upon successful registration.
