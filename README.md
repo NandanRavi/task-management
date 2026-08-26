@@ -99,7 +99,7 @@ The Task Management System enables teams to organize projects and tasks with gra
 | **Tasks**    | Retrieve Detail |    ✅     |  ✅   | Assigned to user or owned project |
 | **Tasks**    | Update (PATCH)  |    ✅     |  ✅   |        Assigned user only         |
 | **Tasks**    | Delete          |    ✅     |  ❌   |        Project owner only         |
-| **Users**    | View List       |    All    |  All  |               All                 |
+| **Users**    | View List       |    All    |  All  |                All                |
 
 ---
 
@@ -173,7 +173,7 @@ DEFAULT_FROM_EMAIL=your_email@example.com
 ### 1. Development Server (HTTP + WebSockets)
 
 ```bash
-python manage.py runserver 8000
+python manage.py runserver
 ```
 
 ### 2. Django-Q Background Worker
